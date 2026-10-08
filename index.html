@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cloud Phone</title>
+
+<style>
+*{
+  box-sizing:border-box;
+  font-family:Arial,sans-serif;
+}
+
+body{
+  margin:0;
+  background:#10131a;
+  color:white;
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+
+.app{
+  width:100%;
+  max-width:430px;
+  min-height:100vh;
+  padding:20px;
+  background:linear-gradient(180deg,#171d2b,#090b10);
+}
+
+h1{
+  margin:10px 0 5px;
+  font-size:30px;
+}
+
+.sub{
+  color:#9da7ba;
+  margin-bottom:25px;
+}
+
+.status{
+  background:#1d2635;
+  border-radius:18px;
+  padding:20px;
+  margin-bottom:20px;
+  border:1px solid #303b4f;
+}
+
+.status-title{
+  color:#aeb8c9;
+  font-size:14px;
+}
+
+.status-value{
+  margin-top:8px;
+  font-size:22px;
+  font-weight:bold;
+}
+
+.dot{
+  display:inline-block;
+  width:10px;
+  height:10px;
+  background:#777;
+  border-radius:50%;
+  margin-right:8px;
+}
+
+.buttons{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+}
+
+button{
+  border:0;
+  border-radius:16px;
+  padding:18px 10px;
+  font-size:16px;
+  color:white;
+  background:#242d3d;
+}
+
+button:active{
+  transform:scale(.97);
+}
+
+.start{
+  background:#1677ff;
+}
+
+.stop{
+  background:#d63b4a;
+}
+
+.afk{
+  background:#713cff;
+}
+
+.restart{
+  background:#008f72;
+}
+
+.phone{
+  margin-top:25px;
+  background:#050608;
+  border:6px solid #30343c;
+  border-radius:30px;
+  height:420px;
+  overflow:hidden;
+  position:relative;
+}
+
+.phone-top{
+  height:35px;
+  background:#111318;
+  text-align:center;
+  padding-top:8px;
+  font-size:12px;
+  color:#aaa;
+}
+
+.screen{
+  height:calc(100% - 35px);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  background:
+    radial-gradient(circle at 50% 30%,#263c70,#080b12 65%);
+}
+
+.cloud{
+  font-size:55px;
+}
+
+.screen h2{
+  margin:10px;
+}
+
+.screen p{
+  color:#9da7ba;
+}
+
+.afk-time{
+  margin-top:20px;
+  color:#72e6c2;
+  font-size:14px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+<h1>☁️ Cloud Phone</h1>
+<div class="sub">มือถือเสมือนของคุณ</div>
+
+<div class="status">
+  <div class="status-title">สถานะเครื่อง</div>
+  <div class="status-value">
+    <span class="dot" id="dot"></span>
+    <span id="status">ปิดเครื่อง</span>
+  </div>
+</div>
+
+<div class="buttons">
+
+<button class="start" onclick="startPhone()">
+▶️ เริ่มเครื่อง
+</button>
+
+<button class="stop" onclick="stopPhone()">
+⏹️ หยุดเครื่อง
+</button>
+
+<button class="afk" onclick="startAFK()">
+⏱️ AFK
+</button>
+
+<button class="restart" onclick="restartPhone()">
+🔄 รีสตาร์ต
+</button>
+
+</div>
+
+<div class="phone">
+
+<div class="phone-top">
+Cloud Android
+</div>
+
+<div class="screen">
+
+<div class="cloud">☁️</div>
+
+<h2 id="screenTitle">
+Cloud Phone
+</h2>
+
+<p id="screenText">
+กด "เริ่มเครื่อง" เพื่อเริ่ม
+</p>
+
+<div class="afk-time" id="afkTime"></div>
+
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+let running=false;
+let afkTimer=null;
+
+function updateUI(){
+
+const status=document.getElementById("status");
+const dot=document.getElementById("dot");
+const title=document.getElementById("screenTitle");
+const text=document.getElementById("screenText");
+
+if(running){
+
+status.innerText="กำลังทำงาน";
+dot.style.background="#22d98a";
+
+title.innerText="Android Cloud";
+text.innerText="เครื่องกำลังทำงาน ☁️";
+
+}else{
+
+status.innerText="ปิดเครื่อง";
+dot.style.background="#777";
+
+title.innerText="Cloud Phone";
+text.innerText="กด \"เริ่มเครื่อง\" เพื่อเริ่ม";
+
+}
+
+}
+
+function startPhone(){
+
+running=true;
+
+updateUI();
+
+}
+
+function stopPhone(){
+
+running=false;
+
+if(afkTimer){
+clearInterval(afkTimer);
+afkTimer=null;
+}
+
+document.getElementById("afkTime").innerText="";
+
+updateUI();
+
+}
+
+function restartPhone(){
+
+running=false;
+updateUI();
+
+setTimeout(function(){
+
+running=true;
+updateUI();
+
+},1000);
+
+}
+
+function startAFK(){
+
+if(!running){
+
+alert("กรุณาเริ่ม Cloud Phone ก่อน");
+
+return;
+
+}
+
+let seconds=3600;
+
+clearInterval(afkTimer);
+
+afkTimer=setInterval(function(){
+
+seconds--;
+
+let h=Math.floor(seconds/3600);
+let m=Math.floor((seconds%3600)/60);
+let s=seconds%60;
+
+document.getElementById("afkTime").innerText=
+"⏱️ AFK เหลือ "+h+"ชม. "+m+"น. "+s+"วิ.";
+
+if(seconds<=0){
+
+clearInterval(afkTimer);
+
+document.getElementById("afkTime").innerText=
+"✅ AFK ครบ 1 ชั่วโมง";
+
+}
+
+},1000);
+
+}
+
+update
