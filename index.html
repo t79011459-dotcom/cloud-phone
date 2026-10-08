@@ -1,1 +1,459 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Cloud Phone</title>
 
+<style>
+*{
+  box-sizing:border-box;
+  -webkit-tap-highlight-color:transparent;
+}
+
+body{
+  margin:0;
+  background:#080b12;
+  color:white;
+  font-family:Arial,sans-serif;
+}
+
+.header{
+  height:60px;
+  background:#111827;
+  display:flex;
+  align-items:center;
+  padding:0 18px;
+  border-bottom:1px solid #293246;
+}
+
+.logo{
+  font-size:22px;
+  font-weight:bold;
+}
+
+.online{
+  margin-left:12px;
+  background:#163d2b;
+  color:#6ff0ad;
+  padding:6px 12px;
+  border-radius:20px;
+  font-size:12px;
+}
+
+.container{
+  display:flex;
+  min-height:calc(100vh - 60px);
+}
+
+.sidebar{
+  width:260px;
+  background:#0e1420;
+  padding:20px;
+  border-right:1px solid #252e40;
+}
+
+.title{
+  color:#aab5c8;
+  margin-bottom:15px;
+}
+
+.info{
+  background:#171f2e;
+  border:1px solid #2b374b;
+  border-radius:15px;
+  padding:15px;
+  margin-bottom:15px;
+}
+
+.info div{
+  display:flex;
+  justify-content:space-between;
+  margin:10px 0;
+  color:#aeb8c8;
+}
+
+.info b{
+  color:white;
+}
+
+button{
+  width:100%;
+  border:0;
+  border-radius:13px;
+  padding:15px;
+  margin:6px 0;
+  color:white;
+  font-size:16px;
+  font-weight:bold;
+}
+
+.start{
+  background:#1677ff;
+}
+
+.stop{
+  background:#d83d4c;
+}
+
+.afk{
+  background:#7040e8;
+}
+
+.restart{
+  background:#008c73;
+}
+
+.main{
+  flex:1;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  padding:20px;
+}
+
+.phone{
+  width:430px;
+  height:780px;
+  max-width:90vw;
+  max-height:82vh;
+  min-height:520px;
+  background:#020304;
+  border:8px solid #343b49;
+  border-radius:40px;
+  overflow:hidden;
+  box-shadow:0 20px 70px #000;
+}
+
+.topphone{
+  height:30px;
+  background:#090a0c;
+  text-align:center;
+  padding:7px;
+  font-size:11px;
+  color:#aaa;
+}
+
+.screen{
+  height:calc(100% - 30px);
+  background:
+    radial-gradient(circle at 50% 25%,#263d70,#080b12 65%);
+  display:flex;
+  flex-direction:column;
+}
+
+.statusbar{
+  height:32px;
+  padding:8px 13px;
+  display:flex;
+  justify-content:space-between;
+  font-size:11px;
+}
+
+.android{
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+}
+
+.cloud{
+  font-size:75px;
+}
+
+.android h1{
+  font-size:25px;
+  margin:8px;
+}
+
+.android p{
+  color:#9da8ba;
+}
+
+.bottom{
+  height:45px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  font-size:22px;
+}
+
+.toast{
+  position:fixed;
+  left:50%;
+  bottom:30px;
+  transform:translateX(-50%);
+  background:#202938;
+  padding:13px 20px;
+  border-radius:13px;
+  display:none;
+}
+
+@media(max-width:600px){
+
+.container{
+  display:block;
+}
+
+.sidebar{
+  width:100%;
+  border-right:0;
+  border-bottom:1px solid #252e40;
+}
+
+.main{
+  min-height:600px;
+}
+
+.phone{
+  width:270px;
+  height:500px;
+  min-height:0;
+}
+
+button{
+  width:48%;
+}
+
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">
+  <div class="logo">☁️ Cloud Phone</div>
+  <div class="online">● ONLINE</div>
+</div>
+
+<div class="container">
+
+<div class="sidebar">
+
+<div class="title">เครื่องของฉัน</div>
+
+<div class="info">
+
+<div>
+<span>เครื่อง</span>
+<b>Android Cloud</b>
+</div>
+
+<div>
+<span>สถานะ</span>
+<b id="status">ปิดเครื่อง</b>
+</div>
+
+<div>
+<span>AFK</span>
+<b id="time">—</b>
+</div>
+
+</div>
+
+<button class="start" onclick="startPhone()">
+▶️ เริ่มเครื่อง
+</button>
+
+<button class="stop" onclick="stopPhone()">
+⏹️ หยุดเครื่อง
+</button>
+
+<button class="afk" onclick="startAFK()">
+⏱️ AFK 1 ชั่วโมง
+</button>
+
+<button class="restart" onclick="restartPhone()">
+🔄 รีสตาร์ต
+</button>
+
+</div>
+
+<div class="main">
+
+<div class="phone">
+
+<div class="topphone">
+● Cloud Android ●
+</div>
+
+<div class="screen">
+
+<div class="statusbar">
+<span>9:41</span>
+<span>▣ ▰ 100%</span>
+</div>
+
+<div class="android">
+
+<div class="cloud">
+☁️
+</div>
+
+<h1 id="phoneTitle">
+Cloud Phone
+</h1>
+
+<p id="phoneText">
+กด "เริ่มเครื่อง" เพื่อเปิด
+</p>
+
+</div>
+
+<div class="bottom">
+━
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+
+let running=false;
+let afkSeconds=0;
+let afkInterval=null;
+
+function update(){
+
+if(running){
+
+document.getElementById("status").innerText="กำลังทำงาน";
+
+document.getElementById("phoneTitle").innerText=
+"Android Cloud";
+
+document.getElementById("phoneText").innerText=
+"เครื่องกำลังทำงาน ☁️";
+
+}else{
+
+document.getElementById("status").innerText="ปิดเครื่อง";
+
+document.getElementById("phoneTitle").innerText=
+"Cloud Phone";
+
+document.getElementById("phoneText").innerText=
+'กด "เริ่มเครื่อง" เพื่อเปิด';
+
+}
+
+}
+
+function startPhone(){
+
+running=true;
+
+update();
+
+showToast("✅ เปิด Cloud Phone แล้ว");
+
+}
+
+function stopPhone(){
+
+running=false;
+
+clearInterval(afkInterval);
+
+document.getElementById("time").innerText="—";
+
+update();
+
+showToast("⏹️ ปิดเครื่องแล้ว");
+
+}
+
+function restartPhone(){
+
+running=false;
+
+update();
+
+showToast("🔄 กำลังรีสตาร์ต...");
+
+setTimeout(function(){
+
+running=true;
+
+update();
+
+showToast("✅ รีสตาร์ตเสร็จแล้ว");
+
+},1500);
+
+}
+
+function startAFK(){
+
+if(!running){
+
+showToast("⚠️ กรุณาเปิดเครื่องก่อน");
+
+return;
+
+}
+
+afkSeconds=3600;
+
+clearInterval(afkInterval);
+
+afkInterval=setInterval(function(){
+
+afkSeconds--;
+
+let h=Math.floor(afkSeconds/3600);
+
+let m=Math.floor((afkSeconds%3600)/60);
+
+let s=afkSeconds%60;
+
+document.getElementById("time").innerText=
+h+"ชม. "+
+String(m).padStart(2,"0")+"น. "+
+String(s).padStart(2,"0")+"วิ.";
+
+if(afkSeconds<=0){
+
+clearInterval(afkInterval);
+
+showToast("🎉 AFK ครบ 1 ชั่วโมง");
+
+}
+
+},1000);
+
+showToast("⏱️ เริ่ม AFK แล้ว");
+
+}
+
+function showToast(text){
+
+let box=document.getElementById("toast");
+
+box.innerText=text;
+
+box.style.display="block";
+
+setTimeout(function(){
+
+box.style.display="none";
+
+},2000);
+
+}
+
+update();
+
+</script>
+
+</body>
+  </html>
